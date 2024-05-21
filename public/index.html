@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .form-group button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciamento de Produtos</h1>
+    <div>
+        <form id="productForm">
+            <div class="form-group">
+                <label for="codigo">Código do Produto:</label>
+                <input type="text" id="codigo" required>
+            </div>
+            <div class="form-group">
+                <label for="produto">Nome do Produto:</label>
+                <input type="text" id="produto" required>
+            </div>
+            <div class="form-group">
+                <label for="quantidade">Quantidade:</label>
+                <input type="number" id="quantidade" required>
+            </div>
+            <div class="form-group">
+                <label for="motivo">Motivo:</label>
+                <select id="motivo" required>
+                    <option value="">Selecione...</option>
+                    <option value="VENCIDO">VENCIDO</option>
+                    <option value="USO LOJA">USO LOJA</option>
+                    <option value="AVARIADO">AVARIADO</option>
+                </select>
+            </div>
+            <div class="form-group" id="dataVencimentoGroup" style="display: none;">
+                <label for="dataVencimento">Data de Vencimento (DD/MM/AAAA):</label>
+                <input type="date" id="dataVencimento">
+            </div>
+            <div class="form-group">
+                <button type="submit">Adicionar Produto</button>
+            </div>
+        </form>
+    </div>
+    <div>
+        <h2>Produtos Adicionados</h2>
+        <table id="productTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Código</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Motivo</th>
+                    <th>Data de Vencimento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas da tabela serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let productCount = 0;
+
+        document.getElementById('motivo').addEventListener('change', function () {
+            if (this.value === 'VENCIDO') {
+                document.getElementById('dataVencimentoGroup').style.display = 'block';
+            } else {
+                document.getElementById('dataVencimentoGroup').style.display = 'none';
+            }
+        });
+
+        document.getElementById('productForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const codigo = document.getElementById('codigo').value;
+            const produto = document.getElementById('produto').value;
+            const quantidade = document.getElementById('quantidade').value;
+            const motivo = document.getElementById('motivo').value;
+            const dataVencimento = document.getElementById('dataVencimento').value;
+
+            const produtoData = {
+                codigo,
+                produto,
+                quantidade,
+                motivo,
+                dataVencimento: motivo === 'VENCIDO' ? dataVencimento : ''
+            };
+
+            fetch('/addProduct', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(produtoData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Produto adicionado com sucesso!');
+                addProductToTable(produtoData);
+                document.getElementById('productForm').reset();
+                document.getElementById('dataVencimentoGroup').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        function addProductToTable(produto) {
+            productCount++;
+            const tableBody = document.getElementById('productTable').querySelector('tbody');
+            const row = document.createElement('tr');
+
+            row.innerHTML = `
+                <td>${productCount}</td>
+                <td>${produto.codigo}</td>
+                <td>${produto.produto}</td>
+                <td>${produto.quantidade}</td>
+                <td>${produto.motivo}</td>
+                <td>${produto.dataVencimento}</td>
+            `;
+
+            tableBody.appendChild(row);
+        }
+
+        // Carregar produtos existentes ao iniciar a página
+        window.onload = function () {
+            fetch('/getProducts')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(produto => addProductToTable(produto));
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+    </script>
+</body>
+</html>
