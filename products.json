@@ -1,0 +1,26 @@
+[
+    {
+        "codigo": "222",
+        "produto": "222",
+        "quantidade": "2",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "teste1"
+    },
+    {
+        "codigo": "111",
+        "produto": "111",
+        "quantidade": "1",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "teste2"
+    },
+    {
+        "codigo": "4rer",
+        "produto": "rer",
+        "quantidade": "4",
+        "motivo": "AVARIADO",
+        "dataVencimento": "",
+        "usuario": "teste3"
+    }
+]

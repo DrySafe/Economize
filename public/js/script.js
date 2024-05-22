@@ -1,0 +1,220 @@
+let productCount = 0;
+let editingRow = null;
+
+const productCodes = [];
+const productNames = [];
+const userNames = [];
+
+document.getElementById('motivo').addEventListener('change', function () {
+    if (this.value === 'VENCIDO') {
+        document.getElementById('dataVencimentoGroup').style.display = 'block';
+    } else {
+        document.getElementById('dataVencimentoGroup').style.display = 'none';
+    }
+});
+
+document.getElementById('productForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const codigo = document.getElementById('codigo').value;
+    const produto = document.getElementById('produto').value;
+    const quantidade = document.getElementById('quantidade').value;
+    const motivo = document.getElementById('motivo').value;
+    const dataVencimento = document.getElementById('dataVencimento').value;
+    const usuario = document.getElementById('usuario').value;
+
+    const produtoData = {
+        codigo,
+        produto,
+        quantidade,
+        motivo,
+        dataVencimento: motivo === 'VENCIDO' ? dataVencimento : '',
+        usuario
+    };
+
+    if (editingRow !== null) {
+        updateProductInTable(editingRow, produtoData);
+        editingRow = null;
+        document.getElementById('productForm').reset();
+        document.getElementById('dataVencimentoGroup').style.display = 'none';
+    } else {
+        fetch('/addProduct', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(produtoData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert('Produto adicionado com sucesso!');
+            addProductToTable(produtoData);
+            document.getElementById('productForm').reset();
+            document.getElementById('dataVencimentoGroup').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+});
+
+function addProductToTable(produto) {
+    productCount++;
+    const tableBody = document.getElementById('productTable').querySelector('tbody');
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+        <td>${productCount}</td>
+        <td>${produto.codigo}</td>
+        <td>${produto.produto}</td>
+        <td>${produto.quantidade}</td>
+        <td>${produto.motivo}</td>
+        <td>${produto.dataVencimento}</td>
+        <td>${produto.usuario}</td>
+        <td><button class="edit-button" onclick="editProduct(this)">Editar</button></td>
+    `;
+
+    tableBody.appendChild(row);
+
+    if (!productCodes.includes(produto.codigo)) productCodes.push(produto.codigo);
+    if (!productNames.includes(produto.produto)) productNames.push(produto.produto);
+    if (!userNames.includes(produto.usuario)) userNames.push(produto.usuario);
+}
+
+function editProduct(button) {
+    const row = button.parentElement.parentElement;
+    editingRow = row;
+
+    document.getElementById('codigo').value = row.children[1].innerText;
+    document.getElementById('produto').value = row.children[2].innerText;
+    document.getElementById('quantidade').value = row.children[3].innerText;
+    document.getElementById('motivo').value = row.children[4].innerText;
+    document.getElementById('dataVencimento').value = row.children[5].innerText;
+    document.getElementById('usuario').value = row.children[6].innerText;
+
+    if (row.children[4].innerText === 'VENCIDO') {
+        document.getElementById('dataVencimentoGroup').style.display = 'block';
+    } else {
+        document.getElementById('dataVencimentoGroup').style.display = 'none';
+    }
+}
+
+function updateProductInTable(row, produto) {
+    row.children[1].innerText = produto.codigo;
+    row.children[2].innerText = produto.produto;
+    row.children[3].innerText = produto.quantidade;
+    row.children[4].innerText = produto.motivo;
+    row.children[5].innerText = produto.dataVencimento;
+    row.children[6].innerText = produto.usuario;
+
+    alert('Produto atualizado com sucesso!');
+}
+
+window.onload = function () {
+    fetch('/getProducts')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(produto => addProductToTable(produto));
+        });
+
+    autocomplete(document.getElementById('codigo'), productCodes);
+    autocomplete(document.getElementById('produto'), productNames);
+    autocomplete(document.getElementById('usuario'), userNames);
+};
+
+function autocomplete(inp, arr) {
+    let currentFocus;
+
+    inp.addEventListener('input', function(e) {
+        let a, b, i, val = this.value;
+
+        closeAllLists();
+        if (!val) { return false;}
+        currentFocus = -1;
+
+        a = document.createElement('div');
+        a.setAttribute('id', this.id + 'autocomplete-list');
+        a.setAttribute('class', 'autocomplete-items');
+
+        this.parentNode.appendChild(a);
+
+        for (i = 0; i < arr.length; i++) {
+            if (arr[i].substr(0, val.length).toUpperCase() === val.toUpperCase()) {
+                b = document.createElement('div');
+                b.innerHTML = '<strong>' + arr[i].substr(0, val.length) + '</strong>';
+                b.innerHTML += arr[i].substr(val.length);
+                b.innerHTML += '<input type="hidden" value="' + arr[i] + '">';
+
+                b.addEventListener('click', function(e) {
+                    inp.value = this.getElementsByTagName('input')[0].value;
+                    closeAllLists();
+                });
+
+                a.appendChild(b);
+            }
+        }
+    });
+
+    inp.addEventListener('keydown', function(e) {
+        let x = document.getElementById(this.id + 'autocomplete-list');
+        if (x) x = x.getElementsByTagName('div');
+        if (e.keyCode === 40) {
+            currentFocus++;
+            addActive(x);
+        } else if (e.keyCode === 38) {
+            currentFocus--;
+            addActive(x);
+        } else if (e.keyCode === 13) {
+            e.preventDefault();
+            if (currentFocus > -1) {
+                if (x) x[currentFocus].click();
+            }
+        }
+    });
+
+    function addActive(x) {
+        if (!x) return false;
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = x.length - 1;
+        x[currentFocus].classList.add('autocomplete-active');
+    }
+
+    function removeActive(x) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove('autocomplete-active');
+        }
+    }
+
+    function closeAllLists(elmnt) {
+        const x = document.getElementsByClassName('autocomplete-items');
+        for (let i = 0; i < x.length; i++) {
+            if (elmnt !== x[i] && elmnt !== inp) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        closeAllLists(e.target);
+    });
+}
+
+// Adicionando manipulador de evento para o botão de exportar para Excel
+document.getElementById('exportExcelButton').addEventListener('click', exportToExcel);
+
+// Função para exportar os dados da tabela para um arquivo Excel
+function exportToExcel() {
+    fetch('/exportToExcel')
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'produtos.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(err => console.error('Erro ao exportar para Excel:', err));
+}
