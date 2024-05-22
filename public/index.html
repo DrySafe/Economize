@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,21 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
         }
         .form-group {
             margin-bottom: 15px;
@@ -15,10 +30,12 @@
             display: block;
             margin-bottom: 5px;
         }
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         .form-group button {
             padding: 10px 20px;
@@ -26,6 +43,10 @@
             color: #fff;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
         }
         table {
             width: 100%;
@@ -33,141 +54,160 @@
             margin-top: 20px;
         }
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
         th, td {
-            padding: 8px;
+            padding: 10px;
             text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
     </style>
 </head>
 <body>
-    <h1>Gerenciamento de Produtos</h1>
-    <div>
-        <form id="productForm">
-            <div class="form-group">
-                <label for="codigo">Código do Produto:</label>
-                <input type="text" id="codigo" required>
-            </div>
-            <div class="form-group">
-                <label for="produto">Nome do Produto:</label>
-                <input type="text" id="produto" required>
-            </div>
-            <div class="form-group">
-                <label for="quantidade">Quantidade:</label>
-                <input type="number" id="quantidade" required>
-            </div>
-            <div class="form-group">
-                <label for="motivo">Motivo:</label>
-                <select id="motivo" required>
-                    <option value="">Selecione...</option>
-                    <option value="VENCIDO">VENCIDO</option>
-                    <option value="USO LOJA">USO LOJA</option>
-                    <option value="AVARIADO">AVARIADO</option>
-                </select>
-            </div>
-            <div class="form-group" id="dataVencimentoGroup" style="display: none;">
-                <label for="dataVencimento">Data de Vencimento (DD/MM/AAAA):</label>
-                <input type="date" id="dataVencimento">
-            </div>
-            <div class="form-group">
-                <button type="submit">Adicionar Produto</button>
-            </div>
-        </form>
-    </div>
-    <div>
+    <div class="container">
+        <h1>Gerenciamento de Produtos</h1>
+        <div class="form-group">
+            <label for="codigo">Código:</label>
+            <input type="text" id="codigo">
+        </div>
+        <div class="form-group">
+            <label for="produto">Produto:</label>
+            <input type="text" id="produto">
+        </div>
+        <div class="form-group">
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade">
+        </div>
+        <div class="form-group">
+            <label for="motivo">Motivo:</label>
+            <select id="motivo">
+                <option value="USO LOJA">USO LOJA</option>
+                <option value="AVARIADO">AVARIADO</option>
+                <option value="VENCIDO">VENCIDO</option>
+            </select>
+        </div>
+        <div class="form-group" id="dataVencimentoGroup" style="display:none;">
+            <label for="dataVencimento">Data de Vencimento:</label>
+            <input type="date" id="dataVencimento">
+        </div>
+        <div class="form-group btn-group">
+            <button id="addProductButton">Adicionar Produto</button>
+            <button id="exportExcelButton">Exportar para Excel</button>
+        </div>
         <h2>Produtos Adicionados</h2>
         <table id="productTable">
             <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Nº</th>
                     <th>Código</th>
                     <th>Produto</th>
                     <th>Quantidade</th>
                     <th>Motivo</th>
                     <th>Data de Vencimento</th>
+                    <th>Usuário</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Linhas da tabela serão inseridas aqui -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
     <script>
-        let productCount = 0;
+        document.addEventListener('DOMContentLoaded', function() {
+            const motivoSelect = document.getElementById('motivo');
+            const dataVencimentoGroup = document.getElementById('dataVencimentoGroup');
+            const addProductButton = document.getElementById('addProductButton');
+            const exportExcelButton = document.getElementById('exportExcelButton');
+            const productTableBody = document.querySelector('#productTable tbody');
 
-        document.getElementById('motivo').addEventListener('change', function () {
-            if (this.value === 'VENCIDO') {
-                document.getElementById('dataVencimentoGroup').style.display = 'block';
-            } else {
-                document.getElementById('dataVencimentoGroup').style.display = 'none';
-            }
-        });
-
-        document.getElementById('productForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const codigo = document.getElementById('codigo').value;
-            const produto = document.getElementById('produto').value;
-            const quantidade = document.getElementById('quantidade').value;
-            const motivo = document.getElementById('motivo').value;
-            const dataVencimento = document.getElementById('dataVencimento').value;
-
-            const produtoData = {
-                codigo,
-                produto,
-                quantidade,
-                motivo,
-                dataVencimento: motivo === 'VENCIDO' ? dataVencimento : ''
-            };
-
-            fetch('/addProduct', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(produtoData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert('Produto adicionado com sucesso!');
-                addProductToTable(produtoData);
-                document.getElementById('productForm').reset();
-                document.getElementById('dataVencimentoGroup').style.display = 'none';
-            })
-            .catch(error => {
-                console.error('Error:', error);
+            motivoSelect.addEventListener('change', function() {
+                if (this.value === 'VENCIDO') {
+                    dataVencimentoGroup.style.display = 'block';
+                } else {
+                    dataVencimentoGroup.style.display = 'none';
+                }
             });
-        });
 
-        function addProductToTable(produto) {
-            productCount++;
-            const tableBody = document.getElementById('productTable').querySelector('tbody');
-            const row = document.createElement('tr');
+            addProductButton.addEventListener('click', function() {
+                const codigo = document.getElementById('codigo').value;
+                const produto = document.getElementById('produto').value;
+                const quantidade = document.getElementById('quantidade').value;
+                const motivo = document.getElementById('motivo').value;
+                const dataVencimento = document.getElementById('dataVencimento').value;
 
-            row.innerHTML = `
-                <td>${productCount}</td>
-                <td>${produto.codigo}</td>
-                <td>${produto.produto}</td>
-                <td>${produto.quantidade}</td>
-                <td>${produto.motivo}</td>
-                <td>${produto.dataVencimento}</td>
-            `;
-
-            tableBody.appendChild(row);
-        }
-
-        // Carregar produtos existentes ao iniciar a página
-        window.onload = function () {
-            fetch('/getProducts')
+                fetch('/addProduct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ codigo, produto, quantidade, motivo, dataVencimento })
+                })
                 .then(response => response.json())
                 .then(data => {
-                    data.forEach(produto => addProductToTable(produto));
+                    alert(data.message);
+                    loadProducts();
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
-        };
+            });
+
+            exportExcelButton.addEventListener('click', function() {
+                window.location.href = '/exportExcel';
+            });
+
+            function loadProducts() {
+                fetch('/getProducts')
+                    .then(response => response.json())
+                    .then(data => {
+                        productTableBody.innerHTML = '';
+                        data.forEach((product, index) => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${index + 1}</td>
+                                <td>${product.codigo}</td>
+                                <td>${product.produto}</td>
+                                <td>${product.quantidade}</td>
+                                <td>${product.motivo}</td>
+                                <td>${product.dataVencimento || ''}</td>
+                                <td>${product.userId}</td>
+                                <td><button class="edit-button" data-index="${index}">Editar</button></td>
+                            `;
+                            productTableBody.appendChild(row);
+                        });
+
+                        document.querySelectorAll('.edit-button').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const index = this.getAttribute('data-index');
+                                const product = data[index];
+                                document.getElementById('codigo').value = product.codigo;
+                                document.getElementById('produto').value = product.produto;
+                                document.getElementById('quantidade').value = product.quantidade;
+                                document.getElementById('motivo').value = product.motivo;
+                                if (product.motivo === 'VENCIDO') {
+                                    document.getElementById('dataVencimento').value = product.dataVencimento;
+                                    dataVencimentoGroup.style.display = 'block';
+                                } else {
+                                    dataVencimentoGroup.style.display = 'none';
+                                }
+                                // You can add more logic here to handle the editing
+                            });
+                        });
+                    });
+            }
+
+            loadProducts();
+        });
     </script>
 </body>
 </html>
