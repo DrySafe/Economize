@@ -5,7 +5,7 @@ const fs = require('fs');
 const ExcelJS = require('exceljs');
 
 const app = express();
-const port = 3500;
+const port = process.env.PORT || 3500;
 const productsFilePath = path.join(__dirname, 'products.json');
 
 let products = [];
