@@ -1,5 +1,3 @@
-//Contém a lógica relacionada ao formulário, incluindo a submissão e a edição de produtos.
-
 import { addProductToTable, updateProductInTable } from './table-handler.js';
 
 let productCount = 0;
@@ -8,6 +6,10 @@ let editingRow = null;
 export const productCodes = [];
 export const productNames = [];
 export const userNames = [];
+
+export function setEditingRow(row) {
+    editingRow = row;
+}
 
 export function handleFormSubmit(event) {
     event.preventDefault();
@@ -53,3 +55,7 @@ export function handleFormSubmit(event) {
         });
     }
 }
+
+// Tornar editProduct acessível no escopo global
+import { editProduct } from './table-handler.js';
+window.editProduct = editProduct;

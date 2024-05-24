@@ -1,6 +1,4 @@
-//Gerencia a adição, edição e atualização de produtos na tabela.
-
-import { productCodes, productNames, userNames } from './form-handler.js';
+import { productCodes, productNames, userNames, setEditingRow } from './form-handler.js';
 
 let productCount = 0; // Certifique-se de definir productCount
 
@@ -29,7 +27,7 @@ export function addProductToTable(produto) {
 
 export function editProduct(button) {
     const row = button.parentElement.parentElement;
-    editingRow = row;
+    setEditingRow(row);
 
     document.getElementById('codigo').value = row.children[1].innerText;
     document.getElementById('produto').value = row.children[2].innerText;
