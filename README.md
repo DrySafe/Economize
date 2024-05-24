@@ -29,21 +29,22 @@ npm install
 ```
 
 # Uso
-> Instruções sobre como executar a aplicação.
+ **Instruções sobre como executar a aplicação.**
 ```
 > Para iniciar a aplicação
 node server.js
 ```
- ou
-> Execute o teste control.bat.
-> 
-> Selecione opção 1.
-> 
-> Para fechar o localhost:3500 selecione a opção 2.
-> 
-> Para sair opção 3.
-> 
-> Para apagar lista gerada, apague os dados dentro do arquivo products.json.
+ **ou**
+ > Prefira esse método =)
+1. Execute o teste control.bat.
+
+2. Selecione opção 1.
+
+3. Para fechar o localhost:3500 selecione a opção 2.
+
+4. Para sair opção 3.
+
+5. Para apagar lista gerada, apague os dados dentro do arquivo products.json.
 
 
 # Funcionalidades
