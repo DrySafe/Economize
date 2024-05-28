@@ -85,7 +85,7 @@ if %op% equ 2 goto 2
 if %op% equ 3 goto 3
 
 :1
-cd C:\Users\Micro\Documents\Economize\App Controle 2.0 Teste
+cd /d "%~dp0"
 start controle.bat
 goto menu
 
