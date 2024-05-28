@@ -67,7 +67,7 @@ Date /t
 Time /t
 echo ******************************************
 echo *                                        *
-echo *               Menu Bat                 *
+echo *               CONTROL                  *
 echo *                                        *
 echo *     (1) Abrir controle                 *
 echo *     (2) fechar servidor                *
@@ -86,7 +86,7 @@ if %op% equ 3 goto 3
 
 :1
 cd /d "%~dp0"
-start controle.bat
+START /B CMD /C CALL controle.bat
 goto menu
 
 :2
