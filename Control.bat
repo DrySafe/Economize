@@ -86,7 +86,7 @@ if %op% equ 3 goto 3
 
 :1
 cd C:\Users\Micro\Documents\Economize\App Controle 2.0 Teste
-start controle.exe
+start controle.bat
 goto menu
 
 :2
