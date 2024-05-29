@@ -23,13 +23,17 @@ document.getElementById('productForm').addEventListener('submit', function (even
     const dataVencimento = document.getElementById('dataVencimento').value;
     const usuario = document.getElementById('usuario').value;
 
+    // Obter a data e hora atuais e formatar para DD/MM/AAAA HH:mm:ss
+    const dataHoraInsercao = new Date().toLocaleString('pt-BR');
+
     const produtoData = {
         codigo,
         produto,
         quantidade,
         motivo,
         dataVencimento: motivo === 'VENCIDO' ? dataVencimento : '',
-        usuario
+        usuario,
+        dataHoraInsercao // Adicionar data e hora de inserção no formato brasileiro
     };
 
     if (editingRow !== null) {
@@ -71,6 +75,7 @@ function addProductToTable(produto) {
         <td>${produto.motivo}</td>
         <td>${produto.dataVencimento}</td>
         <td>${produto.usuario}</td>
+        <td>${produto.dataHoraInsercao}</td> <!-- Adicionar data e hora de inserção -->
         <td><button class="edit-button" onclick="editProduct(this)">Editar</button></td>
     `;
 
@@ -106,6 +111,7 @@ function updateProductInTable(row, produto) {
     row.children[4].innerText = produto.motivo;
     row.children[5].innerText = produto.dataVencimento;
     row.children[6].innerText = produto.usuario;
+    row.children[7].innerText = produto.dataHoraInsercao; // Adicionar data e hora de inserção
 
     alert('Produto atualizado com sucesso!');
 }

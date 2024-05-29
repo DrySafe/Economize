@@ -1,2 +1,145 @@
 [
+    {
+        "codigo": "teste",
+        "produto": "teste",
+        "quantidade": "222",
+        "motivo": "AVARIADO",
+        "dataVencimento": "",
+        "usuario": "teste2",
+        "dataHoraInsercao": "28/05/2024 11:52:14"
+    },
+    {
+        "codigo": "teste",
+        "produto": "teste",
+        "quantidade": "2",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "teste1",
+        "dataHoraInsercao": "2024-05-28T12:23:01.942Z"
+    },
+    {
+        "codigo": "222",
+        "produto": "2",
+        "quantidade": "2",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "22",
+        "dataHoraInsercao": "28/05/2024 09:31:25"
+    },
+    {
+        "codigo": "22",
+        "produto": "22",
+        "quantidade": "2",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "2",
+        "dataHoraInsercao": "28/05/2024 10:56:36"
+    },
+    {
+        "codigo": "teste",
+        "produto": "teste",
+        "quantidade": "4",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "teste"
+    },
+    {
+        "codigo": "teste",
+        "produto": "222",
+        "quantidade": "4",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "teste",
+        "dataHoraInsercao": "28/05/2024 13:00:00"
+    },
+    {
+        "codigo": "33",
+        "produto": "33",
+        "quantidade": "33",
+        "motivo": "VENCIDO",
+        "dataVencimento": "2045-06-12",
+        "usuario": "rteste",
+        "dataHoraInsercao": "28/05/2024 11:52:33"
+    },
+    {
+        "codigo": "1",
+        "produto": "1",
+        "quantidade": "1",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "1",
+        "dataHoraInsercao": "28/05/2024 13:21:38"
+    },
+    {
+        "codigo": "2",
+        "produto": "2",
+        "quantidade": "2",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "2",
+        "dataHoraInsercao": "28/05/2024 13:21:43"
+    },
+    {
+        "codigo": "3",
+        "produto": "3",
+        "quantidade": "3",
+        "motivo": "AVARIADO",
+        "dataVencimento": "",
+        "usuario": "3",
+        "dataHoraInsercao": "28/05/2024 13:21:49"
+    },
+    {
+        "codigo": "3",
+        "produto": "3",
+        "quantidade": "3",
+        "motivo": "AVARIADO",
+        "dataVencimento": "",
+        "usuario": "3",
+        "dataHoraInsercao": "28/05/2024 13:21:55"
+    },
+    {
+        "codigo": "4",
+        "produto": "4",
+        "quantidade": "4",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "4",
+        "dataHoraInsercao": "28/05/2024 13:22:06"
+    },
+    {
+        "codigo": "5",
+        "produto": "5",
+        "quantidade": "5",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "5",
+        "dataHoraInsercao": "28/05/2024 13:22:11"
+    },
+    {
+        "codigo": "6",
+        "produto": "6",
+        "quantidade": "6",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "6",
+        "dataHoraInsercao": "28/05/2024 13:22:15"
+    },
+    {
+        "codigo": "7",
+        "produto": "7",
+        "quantidade": "7",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "7",
+        "dataHoraInsercao": "28/05/2024 13:22:20"
+    },
+    {
+        "codigo": "7000",
+        "produto": "Fita adelbras larga kraft",
+        "quantidade": "1",
+        "motivo": "USO LOJA",
+        "dataVencimento": "",
+        "usuario": "Wevilly",
+        "dataHoraInsercao": "29/05/2024 14:43:14"
+    }
 ]

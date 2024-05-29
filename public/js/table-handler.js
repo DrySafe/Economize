@@ -15,6 +15,7 @@ export function addProductToTable(produto) {
         <td>${produto.motivo}</td>
         <td>${produto.dataVencimento}</td>
         <td>${produto.usuario}</td>
+        <td>${produto.dataHoraInsercao}</td> <!-- Adicionar a nova coluna -->
         <td><button class="edit-button" onclick="editProduct(this)">Editar</button></td>
     `;
 
@@ -50,6 +51,7 @@ export function updateProductInTable(row, produto) {
     row.children[4].innerText = produto.motivo;
     row.children[5].innerText = produto.dataVencimento;
     row.children[6].innerText = produto.usuario;
+    row.children[7].innerText = produto.dataHoraInsercao; // Atualizar a nova coluna
 
     alert('Produto atualizado com sucesso!');
 }

@@ -31,6 +31,11 @@ app.get('/getProducts', (req, res) => {
 });
 
 app.get('/exportToExcel', (req, res) => {
+    // Ordenar os produtos por motivo
+    products.sort((a, b) => {
+        return a.motivo.localeCompare(b.motivo);
+    });
+
     const workbook = new ExcelJS.Workbook();
     
     // Planilha para os produtos existentes
@@ -43,50 +48,29 @@ app.get('/exportToExcel', (req, res) => {
         { header: 'Motivo', key: 'motivo', width: 13 },
         { header: 'Data de Vencimento', key: 'dataVencimento', width: 19 },
         { header: 'Usuário', key: 'usuario', width: 12 },
-        { width: 3 }, // Coluna 'h'
-        { width: 3 }, // Coluna 'I'
-        { width: 18 }, // Coluna 'J'
+        { header: 'Data e Hora de Inserção', key: 'dataHoraInsercao', width: 25 }, // Nova coluna
+        { header: '', key: 'empty', width: 2 }, // Coluna vazia para separação
+        { header: 'ROTINA', key: 'novaColuna', width: 20 }, // Nova coluna com os dados
+        { header: '', key: 'novaColuna2', width: 20 } // Nova coluna com os dados
     ];
 
-    // Adicionar os dados para a primeira tabela
+    // Adicionar os dados para a tabela
     products.forEach((product, index) => {
-        const { codigo, produto, quantidade, motivo, dataVencimento, usuario } = product;
-        worksheet.addRow({ id: index + 1, codigo, produto, quantidade, motivo, dataVencimento, usuario });
+        const { codigo, produto, quantidade, motivo, dataVencimento, usuario, dataHoraInsercao } = product;
+        worksheet.addRow({ id: index + 1, codigo, produto, quantidade, motivo, dataVencimento, usuario, dataHoraInsercao, empty: '', novaColuna: '' }); // Adiciona uma célula vazia para a nova coluna
     });
 
-    // Adicionar a nova tabela abaixo dos dados existentes
-    const newData = [
-        {descricao: 'ROTINA', preco: 1322 },
-        {descricao: 'Filial', preco: 3 },
-        {descricao: 'Cód Fiscal', preco: 5927 },
-        {descricao: 'Conta Avaria', preco: 402020 },
-        {descricao: 'Conta Consumidor', preco: 300018 },
-        {descricao: 'TOTAL BAIXA', preco: 'R$' },
-    ];
-
-    // Definir estilos para a nova tabela
-    const boldBorder = { top: { style: 'thick' }, left: { style: 'thick' }, bottom: { style: 'thick' }, right: { style: 'thick' } };
-
-    // Adicionar os dados à nova tabela
-    newData.forEach((data, index) => {
-        // Adiciona os dados a partir da nona coluna (coluna 'I')
-        const row = worksheet.getRow(index + 1);
-        row.getCell(9).value = data.id; // Coluna 'I'
-        row.getCell(10).value = data.descricao; // Coluna 'J'
-        row.getCell(11).value = data.preco; // Coluna 'K'
-        // Aplicar negrito para as células da nova tabela
-        if (index < 5) {
-            row.eachCell({ includeEmpty: false }, (cell) => {
-                cell.font = { bold: true };
-            });
-        }
-        // Aplicar bordas grossas para todas as células da nova tabela
-        row.eachCell({ includeEmpty: false }, (cell) => {
-            cell.border = boldBorder;
-        });
+    // Adicionar lista de 10 itens na nova coluna
+    const listaDeItens = ['Filial', 'Cliente', 'Produtos', 'Quantidade', 'CÓD Fiscal', 'Conta Avaria', 'Conta Consumidor', '', 'TOTAL AVARIA', 'TOTAL USO LOJA', 'TOTAL VENCIMENTO'];
+    listaDeItens.forEach((item, index) => {
+        worksheet.getCell(index + 2, 10).value = item; // A coluna '10' representa a nova coluna
     });
 
-    worksheet.getCell('I1').alignment = { horizontal: 'center', vertical: 'middle' };
+    // Adicionar lista de 10 itens na nova coluna
+    const listaDeItens2 = ['', '', '', '', '', '', '', '', '', '', ''];
+    listaDeItens2.forEach((item, index) => {
+        worksheet.getCell(index + 2, 11).value = item; // A coluna '10' representa a nova coluna
+    });
 
     // Estilizar a planilha (opcional)
     worksheet.eachRow({ includeEmpty: false }, function (row, rowNumber) {
@@ -110,9 +94,10 @@ app.get('/exportToExcel', (req, res) => {
         });
     });
 
-    worksheet.views = [{ state: 'frozen', ySplit: 1 }];
+    // Ajustar o alinhamento da nova coluna
+    worksheet.getColumn('novaColuna').alignment = { horizontal: 'left' };
 
-            // Adicionar estilos, se necessário
+    worksheet.views = [{ state: 'frozen', ySplit: 1 }];
 
     // Escrever o arquivo Excel e enviar a resposta
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

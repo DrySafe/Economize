@@ -21,13 +21,20 @@ export function handleFormSubmit(event) {
     const dataVencimento = document.getElementById('dataVencimento').value;
     const usuario = document.getElementById('usuario').value;
 
+    // Obter a data e hora atuais e formatar para DD/MM/AAAA HH:mm:ss
+    const dataHoraInsercao = new Date();
+    const dataFormatada = dataHoraInsercao.toLocaleDateString('pt-BR');
+    const horaFormatada = dataHoraInsercao.toLocaleTimeString('pt-BR');
+    const dataHoraFormatada = `${dataFormatada} ${horaFormatada}`;
+
     const produtoData = {
         codigo,
         produto,
         quantidade,
         motivo,
         dataVencimento: motivo === 'VENCIDO' ? dataVencimento : '',
-        usuario
+        usuario,
+        dataHoraInsercao: dataHoraFormatada // Adicionar data e hora de inserção no formato brasileiro
     };
 
     if (editingRow !== null) {
