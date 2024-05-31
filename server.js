@@ -30,12 +30,6 @@ app.get('/getProducts', (req, res) => {
     res.json(products);
 });
 
-app.get('/exportToExcel', (req, res) => {
-    // Ordenar os produtos por motivo
-    products.sort((a, b) => {
-        return a.motivo.localeCompare(b.motivo);
-    });
-
     const workbook = new ExcelJS.Workbook();
     
     // Planilha para os produtos existentes
