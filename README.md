@@ -10,8 +10,8 @@
 
 # Pré-requisitos
 
-Node.js.
-npm ou yarn.
+Node.js 18.x
+npm
 
 # Instalação
 
@@ -35,7 +35,7 @@ npm install
 node server.js
 ```
  **ou**
- > Prefira esse método =)
+
 1. Execute o teste control.bat.
 
 2. Selecione opção 1.
@@ -44,9 +44,16 @@ node server.js
 
 4. Para sair opção 3.
 
-5. Para apagar lista gerada, apague os dados dentro do arquivo products.json.
 
+**ou**
 
+1. abra o terminal no vscode
+2. digite . pkg
+3. aguarde a criação do executavel
+4. execute
+
+   OBS: esse executável gerado pode ser usado em qualquer computador sem a necessidade de instação Node, NPM, ou dependências.
+   OBS²: senha para resetar lista de produtos 1234, pode ser modificada em event-listeners.js
 # Funcionalidades
  
  + Funcionalidade 1: Facilitar criação de planilha de perdas e uso.
